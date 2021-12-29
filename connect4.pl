@@ -1,4 +1,6 @@
-% tauler([
+% This is how board looks like.
+% Where x and o represents discs of diferents players and - empty spaces
+% board([
 %     [x,-,-,-,-,-,-],
 %     [x,-,-,-,-,-,-],
 %     [x,-,-,-,-,-,-],
@@ -6,42 +8,22 @@
 %     [o,-,-,-,-,-,-],
 %     [o,-,-,-,-,-,-]
 % ]).
-% tauler([[x,-,-,-,-,-,-],[x,-,-,-,-,-,-],[x,-,-,-,-,-,-],[o,-,-,-,-,-,-],[o,-,-,-,-,-,-],[o,-,-,-,-,-,-]])
+% board([[x,-,-,-,-,-,-],[x,-,-,-,-,-,-],[x,-,-,-,-,-,-],[o,-,-,-,-,-,-],[o,-,-,-,-,-,-],[o,-,-,-,-,-,-]])
 
-% tauler([
-%     [x,-,-,-,-,-,-],
-%     [x,-,-,-,-,-,-],
-%     [x,-,-,-,-,-,-],
-%     [-,-,-,-,-,-,-],
-%     [-,-,-,-,-,-,-],
-%     [-,-,-,-,-,-,-]
-% ]).
-%equal = [[x,-,-,-,-,-,-],[x,-,-,-,-,-,-],[x,-,-,-,-,-,-],[-,-,-,-,-,-,-],[-,-,-,-,-,-,-],[-,-,-,-,-,-,-]]
+% Import library
+:- [library].
 
-% tauler([
-%     [x,o,-,x,o,-,x],
-%     [o,-,x,o,-,x,o],
-%     [-,x,o,-,x,o,-],
-%     [x,o,-,x,o,-,x],
-%     [o,-,x,o,-,x,o],
-%     [-,x,o,-,x,o,-]
-% ]).
-%equal = [[x,o,-,x,o,-,x],[o,-,x,o,-,x,o],[-,x,o,-,x,o,-],[x,o,-,x,o,-,x],[o,-,x,o,-,x,o],[-,x,o,-,x,o,-]]
-
-
-%analizeConjunt(Conjunt,Jugador) es satisfa si el Conjunt té 4 fitxes seguides del jugador Jugador.
-analizeConjunt([C|CS],huma) :-
-    append(_,[x,x,x,x|_],C),!.
-analizeConjunt([C|CS],huma) :-
-    analizeConjunt(CS,huma).
-analizeConjunt([C|CS],cpu) :-
-    append(_,[o,o,o,o|_],C),!.
-analizeConjunt([C|CS],cpu) :-
-    analizeConjunt(CS,cpu).
-%test: analizeConjunt([ [x,x,x,-,-,-,-],[x,x,x,x,-,-,-] ],huma).
-%test: analizeConjunt([ [x,x,x,x,o,o,o],[x,x,x,-,-,-,-] ],huma).
-%test: analizeConjunt([ [x,x,x,o,o,o,o],[x,x,x,x,o,o,o] ],cpu).
-%test: analizeConjunt([ [x,x,x,x,o,o,o],[x,x,x,-,o,x,o] ],cpu).
+% checkPlayerCollection(Collections,Player)
+% The Player has four followed discs in one Collection.
+% Collections represents the list of rows,columns or diagonals.
+checkPlayerCollection([Collection|Rest],human) :-
+    append(_,[x,x,x,x|_],Collection),!.
+checkPlayerCollection([Collection|Rest],human) :-
+    checkPlayerCollection(Rest,human).
+checkPlayerCollection([Collection|Rest],cpu) :-
+    append(_,[o,o,o,o|_],Collection),!.
+checkPlayerCollection([Collection|Rest],cpu) :-
+    checkPlayerCollection(Rest,cpu).
 
 % primeraColumna(M,C,S)es satisfa si C es la primera columna de la matriuMi si S  ́es la matriu M sense la primera columna C.
 primeraColumna([],[],[]). %matriu buida
@@ -139,13 +121,13 @@ diagonals(tauler(X),[P4,P5,P6,P7,P8,P9,N4,N5,N6,N7,N8,N9]) :-
 %isWinner(tauler(X),Jugador) es satisfa si el jugador Jugador té 4 en ralla en el tauler.
 isWinner(tauler(X),Jugador) :-
     horitzontal(tauler(X),H),
-    analizeConjunt(H,Jugador),!.
+    checkPlayerCollection(H,Jugador),!.
 isWinner(tauler(X),Jugador) :-
     vertical(tauler(X),V),
-    analizeConjunt(V,Jugador),!.
+    checkPlayerCollection(V,Jugador),!.
 isWinner(tauler(X),Jugador) :-
     diagonals(tauler(X),D),
-    analizeConjunt(D,Jugador),!.
+    checkPlayerCollection(D,Jugador),!.
 
 % tauler([
 %     [-,-,-,-,-,-,-],
